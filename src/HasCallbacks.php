@@ -15,7 +15,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
  */
 trait HasCallbacks
 {
-    public static function fill(NovaRequest $request, $model)
+    public static function fill(NovaRequest $request, $model): array
     {
         if (method_exists(static::class, 'beforeSave')) {
             static::beforeSave($request, $model);
@@ -36,9 +36,10 @@ trait HasCallbacks
                 static::afterCreate($request, $model);
             });
         }
-        
+
         return static::fillFields(
-            $request, $model,
+            $request,
+            $model,
             (new static($model))->creationFieldsWithoutReadonly($request)
         );
     }
@@ -58,7 +59,7 @@ trait HasCallbacks
                 static::afterSave($request, $model);
             });
         }
-        
+
         if (method_exists(static::class, 'afterUpdate')) {
             $model::saved(function ($model) use ($request) {
                 static::afterUpdate($request, $model);
@@ -66,7 +67,8 @@ trait HasCallbacks
         }
 
         return static::fillFields(
-            $request, $model,
+            $request,
+            $model,
             (new static($model))->updateFieldsWithoutReadonly($request)
         );
     }
