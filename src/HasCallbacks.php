@@ -44,7 +44,7 @@ trait HasCallbacks
         );
     }
 
-    public static function fillForUpdate(NovaRequest $request, $model)
+    public static function fillForUpdate(NovaRequest $request, $model): array
     {
         if (method_exists(static::class, 'beforeSave')) {
             static::beforeSave($request, $model);
